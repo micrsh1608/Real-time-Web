@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3002';
+const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3001';
 
 export function useSSE(roomId) {
   const [userCount, setUserCount] = useState(0);
