@@ -12,7 +12,7 @@
 | Real-time (bi-directional) | Socket.io (WebSocket) |
 | Real-time (one-way push) | Server-Sent Events (SSE) |
 | Database | MongoDB + Mongoose |
-| AI Integration | Anthropic Claude API |
+| AI Integration | Google Gemini API  |
 
 ## Features
 
