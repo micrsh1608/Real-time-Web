@@ -69,7 +69,9 @@ cd frontend && npm run dev
 ```
 
 Open http://localhost:5173
-
+Account test:
+name: admin1 room_id: 123
+name: admin2 room_id: 123
 ### Test credentials
 
 - Enter any name and room ID to join
