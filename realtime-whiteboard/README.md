@@ -52,10 +52,10 @@ npm install
 ### 2. Environment variables (backend/.env)
 
 ```
-PORT=3001
+PORT=3002
 CLIENT_URL=http://localhost:5173
-MONGODB_URI=mongodb://localhost:27017/whiteboard
-ANTHROPIC_API_KEY=sk-ant-...
+MONGODB_URI=mongodb+srv://huypham16082006:MatKhau123@cluster0.uwobzan.mongodb.net/whiteboard?appName=Cluster0
+GEMINI_API_KEY=AIzaSyArNKhKmDpeNFHA5bfTY5ZDEutV4IWRWdg
 ```
 
 ### 3. Run
