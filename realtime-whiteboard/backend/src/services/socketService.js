@@ -1,7 +1,7 @@
 const Room = require('../models/Room');
 const Message = require('../models/Message');
 const { broadcastSSE } = require('./sseService');
-const { askAI } = require('./aiService');
+const { generateDrawingCommands } = require("./aiService");
 
 const userColors = ['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6','#1abc9c','#e67e22','#e91e63'];
 let colorIndex = 0;
@@ -91,7 +91,7 @@ function initSocket(io) {
       // AI command: /ai <prompt>
       if (text.startsWith('/ai ')) {
         const prompt = text.slice(4);
-        const aiReply = await askAI(prompt, roomId);
+        const aiReply = await generateDrawingCommands(prompt);
         const aiMsg = await Message.create({ roomId, userName: 'AI Assistant', text: aiReply, type: 'ai' });
         io.to(roomId).emit('chat-message', aiMsg);
 
@@ -115,11 +115,25 @@ function initSocket(io) {
 
     // --- UNDO ---
     socket.on('undo', async ({ roomId, userId }) => {
-      await Room.updateOne({ roomId, 'strokes.userId': userId },
-        { $pop: { strokes: 1 } } // simplified undo
-      );
       const room = await Room.findOne({ roomId });
-      io.to(roomId).emit('canvas-state', room.strokes);
+      if (!room || !room.strokes || room.strokes.length === 0) return;
+
+      // Find the last stroke created by this user
+      const lastStroke = [...room.strokes].reverse().find(s => s.userId === userId);
+      
+      if (lastStroke) {
+        await Room.updateOne(
+          { roomId },
+          { $pull: { strokes: { _id: lastStroke._id } } }
+        );
+        
+        // Fetch the updated room state to broadcast
+        const updatedRoom = await Room.findOne({ roomId });
+        io.to(roomId).emit('canvas-state', { 
+          strokes: updatedRoom.strokes, 
+          bgColor: updatedRoom.bgColor 
+        });
+      }
     });
 
     // --- DISCONNECT ---
